@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <form action="" autocomplete="on" class="form">
+        <h1 class="a-left">Sign Up</h1>
+        <p class="a-left">Please fill in this form to create an account!</p>
+        <div class="names">
+            <div class="fields">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#555555">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <input type="text" name="First name" id="first-name" placeholder="First name">
+                <span class="error-message"></span>
+            </div>
+            <div class="fields">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#555555">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <input type="text" name="Last name" id="last-name" placeholder="Last name">
+                <span class="error-message"></span>
+            </div>
+        </div>
+        <div class="fields">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#555555">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <input type="email" class="field" name="Email" id="email" placeholder="Email">
+            <span class="error-message"></span>
+        </div>
+        <div class="fields">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#555555">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+            <input type="password" class="field" name="Password" id="password" placeholder="Password">
+            <span class="error-message"></span>
+        </div>
+        <div class="fields">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="#555555">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+            </svg>
+            <input type="password" class="field" name="Password confirmation" id="confirm-password"
+                placeholder="Confirm password">
+            <span class="error-message"></span>
+        </div>
+        <div class="policy">
+            <input type="checkbox" class="checked" name="checkbox" id="checked">
+            <label for="checked"> I accept the <a href="#">Terms of Use</a> & <a href="#">Privacy Policy</a>.</label>
+        </div>
+
+        <button disabled>
+            <span>Sign Up</span>
+            <div class="loader">
+                <div id="bar1"></div>
+                <div id="bar2"></div>
+                <div id="bar3"></div>
+                <div id="bar4"></div>
+                <div id="bar5"></div>
+            </div>
+        </button>
+        <p class="a-left">Already have an account? <a href="login3.html">Login here</a></p>
+    </form>
+
+    <script >
+        class FormValidator {
+    constructor(form, fields) {
+        this.form = form;
+        this.fields = fields;
+    }
+
+    initialize() {
+        this.validateOnEntry();
+        this.validateOnSubmit();
+    }
+
+    validateOnEntry() {
+        let self = this; //stores the value of the 'this' keyword on the constructor
+        this.fields.forEach(field => {
+            const input = document.querySelector(`#${field}`);
+            input.addEventListener("keyup", () => {
+                self.validateInput(input);
+            })
+        })
+    }
+
+    validateOnSubmit() {
+        this.form.addEventListener("submit", e => {
+            e.preventDefault(); //prevents the default action on the submit button
+            button.lastElementChild.style.display = "flex";
+            setTimeout(() => { button.lastElementChild.style.display = "none" }, 2000);
+        })
+    }
+
+    validateInput(field) {
+        if (field.value.trim() === "") {
+            this.setStatus(field, `${field.getAttribute('name')} cannot be blank!`, "error");
+        }
+        else {
+            if (field.type === "text") {
+                return this.validateName(field);
+            }
+
+            if (field.type === "email") {
+                return this.validateEmail(field);
+            }
+
+            if (field.id === "password") {
+                return this.validatePassword(field);
+            }
+
+            if (field.id === "confirm-password") {
+                return this.validatePwdConfirmation(field);
+            }
+        }
+    }
+
+    validateName(field) {
+        if (field.value.length > 1) {
+            const matchText = /^[a-zA-Z\s][^0-9]+$/;
+            if (matchText.test(field.value)) {
+                this.setStatus(field, null, "success");
+                field.value = field.value.trim();
+            }
+            else {
+                this.setStatus(field, "Use valid characters.", "error");
+            }
+        }
+    }
+
+    validateEmail(field) {
+        const matchEmail = /\S+@\S+.\S+/;
+        if (matchEmail.test(field.value)) {
+            this.setStatus(field, null, "success");
+        }
+        else {
+            this.setStatus(field, "Please input a valid email.", "error");
+        }
+    }
+
+    validatePassword(field) {
+        if (field.value.length < 8) {
+            this.setStatus(field, "Password should be 8 characters long.", "error");
+        }
+        else {
+            this.setStatus(field, null, "success");
+        }
+    }
+
+    validatePwdConfirmation(field) {
+        const password = this.form.querySelector('#password');
+
+        if (field.value !== password.value) {
+            this.setStatus(field, "Password does not match!", "error");
+        }
+        else {
+            this.setStatus(field, null, "success");
+        }
+    }
+
+    setStatus(field, message, status) {
+        const errorMessage = field.parentElement.querySelector('.error-message');
+        const icon = field.parentElement.querySelector('.icon');
+
+        if (status === "success") {
+            icon.classList.remove('red');
+            icon.classList.add('blue')
+            errorMessage.innerHTML = "";
+        }
+
+        if (status === "error") {
+            icon.classList.remove('blue');
+            icon.classList.add('red');
+            errorMessage.innerHTML = message;
+        }
+    }
+}
+
+class EnableButton {
+    constructor(form, fields) {
+        this.form = form;
+        this.fields = fields;
+    }
+
+    enableButton() {
+        this.form.addEventListener("input", e => {
+            const firstName = document.querySelector(`#${fields[0]}`);
+            const lastName = document.querySelector(`#${fields[1]}`);
+            const email = document.querySelector(`#${fields[2]}`);
+            const password = document.querySelector(`#${fields[3]}`);
+            const pwdConfirmation = document.querySelector(`#${fields[4]}`);
+            const checkbox = document.querySelector(`#${fields[5]}`);
+            if (this.validName(firstName) && this.validName(lastName) && this.validEmail(email) && this.validPassword(password) && this.validPwdConfirmation(pwdConfirmation) && this.checkedCheckbox(checkbox)) {
+                button.disabled = false;
+            }
+            else {
+                button.disabled = true;
+            }
+        })
+    }
+
+    validName(field) {
+        const matchText = /^[a-zA-Z\s][^0-9]+$/; //regex to check name format
+        if (matchText.test(field.value)) {
+            return true;
+        }
+    }
+
+    validEmail(field) {
+        const matchEmail = /\S+@\S+.\S+/; //regex to check email format
+        if (matchEmail.test(field.value)) {
+            return true;
+        }
+    }
+
+    validPassword(field) {
+        if (field.value.length >= 8) {
+            return true;
+        }
+    }
+
+    validPwdConfirmation(field) {
+        const password = this.form.querySelector('#password');
+        if (field.value == password.value) {
+            return true;
+        }
+    }
+
+    checkedCheckbox(field) {
+        if (field.checked) {
+            return true;
+        }
+    }
+}
+
+const form = document.querySelector('.form');
+const fields = ["first-name", "last-name", "email", "password", "confirm-password", "checked"];
+const button = document.querySelector('button');
+
+const validator = new FormValidator(form, fields);
+const btn = new EnableButton(form, fields);
+validator.initialize();
+btn.enableButton();
+    </script>
+</body>
+
+</html>
